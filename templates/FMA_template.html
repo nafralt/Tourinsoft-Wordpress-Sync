@@ -1,0 +1,126 @@
+<% from OffreManager import OffreManager %>
+<% from Fields.Photo import Photo %>
+<% from Fields.ComposedFields import ComposedFields %>
+<% from Fields.PeriodeOuverture import PeriodeOuverture %>
+<% from Fields.SingleFields import SingleFields %>
+<% from Fields.Communication import Communication %>
+<% from Fields.Tarif import Tarif %>
+
+%if not OffreManager.is_empty(offre, SingleFields.DESCRIPTION_COMMERCIALE):
+<!-- wp:paragraph -->
+<p>${OffreManager.get_field(offre, SingleFields.DESCRIPTION_COMMERCIALE)}</p>
+<!-- /wp:paragraph -->
+%endif
+
+<!-- wp:paragraph -->
+<p>${OffreManager.get_field(offre, SingleFields.ADRESSE1_FMA)}\
+    % if not OffreManager.is_empty(offre, SingleFields.ADRESSE1_SUITE_FMA):
+ ${OffreManager.get_field(offre, SingleFields.ADRESSE1_SUITE_FMA)}\
+    %endif
+, ${OffreManager.get_field(offre, SingleFields.COMMUNE_FMA)} ${OffreManager.get_field(offre, SingleFields.CP_FMA)}</p>
+<!-- /wp:paragraph -->
+<!-- wp:shortcode -->
+[leaflet-map fitbounds lat=${OffreManager.get_field(offre, SingleFields.GOOGLE_MAP_LATITUDE)} lng=${OffreManager.get_field(offre, SingleFields.GOOGLE_MAP_LONGITUDE)} width="100%" height="320px"][leaflet-marker]<a href='https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=%3B${OffreManager.get_field(offre, SingleFields.GOOGLE_MAP_LATITUDE)}%2C${OffreManager.get_field(offre, SingleFields.GOOGLE_MAP_LONGITUDE)}#map=18/${OffreManager.get_field(offre, SingleFields.GOOGLE_MAP_LATITUDE)}/${OffreManager.get_field(offre, SingleFields.GOOGLE_MAP_LONGITUDE)}' target='_blank'>Cliquez ici pour calculer votre itinéraire</a>[/leaflet-marker]
+<!-- /wp:shortcode -->
+
+%if not OffreManager.is_empty(offre, ComposedFields.TARIFS):
+<!-- wp:paragraph -->
+<p>Tarifs donnés à titre indicatif sous réserve de modifications.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:table -->
+<figure class="wp-block-table">
+<table>
+<thead>
+<tr>
+<th>Tarifs</th>
+<th>Prix Min</th>
+<th>Prix Max</th>
+<th>Commentaire</th>
+<th>Saisonnalité</th>
+</tr>
+</thead>
+<tbody>
+    %for tarif in OffreManager.get_field(offre, ComposedFields.TARIFS):
+<tr>
+<td>${tarif[Tarif.INTITULE.value]}</td>
+<td>\
+    %if len(tarif[Tarif.MINIMUM.value]) != 0:
+${tarif[Tarif.MINIMUM.value]+" €"}\
+    %endif
+</td>
+<td>\
+        %if len(tarif[Tarif.MAXIMUM.value]) != 0:
+${tarif[Tarif.MAXIMUM.value]+" €"}\
+        %endif
+</td>
+<td>${tarif[Tarif.COMPLEMENT.value]}</td>
+<td>${tarif[Tarif.SAISONNALITE.value]}</td>
+</tr>
+    %endfor
+</tbody>
+</table>
+</figure>
+<!-- /wp:table -->
+%endif
+
+<!-- wp:paragraph -->
+<p>
+%for communication in OffreManager.get_field(offre, ComposedFields.MOYEN_DE_COM):
+    %if communication[Communication.TYPE.value] == "Site web (URL)" or communication[Communication.TYPE.value] == "Facebook":
+<br><a href="${communication[Communication.COORDONNEES.value]}" target="_blank">Consulter le site internet</a>
+    %elif communication[Communication.TYPE.value] == "Mél":
+<br>Adresse mail : <a href="mailto:${communication[Communication.COORDONNEES.value]}">${communication[Communication.COORDONNEES.value]}</a>
+    %else:
+<br>${communication[Communication.TYPE.value]} : ${communication[Communication.COORDONNEES.value]}
+    %endif
+%endfor
+</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>
+%for periode in OffreManager.get_field(offre, ComposedFields.PERIODE_OUVERTURE):
+    %if periode[PeriodeOuverture.DATE_DEBUT.value] == periode[PeriodeOuverture.DATE_FIN.value]: 
+        %if len(periode[PeriodeOuverture.HEURE_OUVERT_1.value]) > 1 and len(periode[PeriodeOuverture.HEURE_FERMETURE_1.value]) <= 1:
+<br>Le ${periode[PeriodeOuverture.DATE_DEBUT.value]} à partir de ${periode[PeriodeOuverture.HEURE_OUVERT_1.value]}
+        %elif len(periode[PeriodeOuverture.HEURE_OUVERT_1.value]) > 1 and len(periode[PeriodeOuverture.HEURE_FERMETURE_1.value]) > 1:
+<br>Le ${periode[PeriodeOuverture.DATE_DEBUT.value]} de ${periode[PeriodeOuverture.HEURE_OUVERT_1.value]} &agrave; ${periode[PeriodeOuverture.HEURE_FERMETURE_1.value]}\
+            %if len(periode[PeriodeOuverture.HEURE_OUVERT_2.value]) > 1:
+ et de ${periode[PeriodeOuverture.HEURE_OUVERT_2.value]} &agrave; ${periode[PeriodeOuverture.HEURE_FERMETURE_2.value]}\
+            %endif
+        %else:
+<br>Le ${periode[PeriodeOuverture.DATE_DEBUT.value]}
+        %endif
+    %else:
+        %if len(periode[PeriodeOuverture.HEURE_OUVERT_1.value]) > 1 and len(periode[PeriodeOuverture.HEURE_FERMETURE_1.value]) <= 1:
+<br>Du ${periode[PeriodeOuverture.DATE_DEBUT.value]} au ${periode[PeriodeOuverture.DATE_FIN.value]} à partir de ${periode[PeriodeOuverture.HEURE_OUVERT_1.value]}
+        %elif len(periode[PeriodeOuverture.HEURE_OUVERT_1.value]) > 1 and len(periode[PeriodeOuverture.HEURE_FERMETURE_1.value]) > 1:
+<br>Du ${periode[PeriodeOuverture.DATE_DEBUT.value]} au ${periode[PeriodeOuverture.DATE_FIN.value]} de ${periode[PeriodeOuverture.HEURE_OUVERT_1.value]} &agrave; ${periode[PeriodeOuverture.HEURE_FERMETURE_1.value]}\
+            %if len(periode[PeriodeOuverture.HEURE_OUVERT_2.value]) > 1:
+ et de ${periode[PeriodeOuverture.HEURE_OUVERT_2.value]} &agrave; ${periode[PeriodeOuverture.HEURE_FERMETURE_2.value]}\
+            %endif
+        %else:
+<br>Du ${periode[PeriodeOuverture.DATE_DEBUT.value]} au ${periode[PeriodeOuverture.DATE_FIN.value]}\
+        %endif
+    %endif
+%endfor
+</p>
+<!-- /wp:paragraph -->
+
+%if not OffreManager.is_empty(offre, ComposedFields.PHOTOS):
+<!-- wp:gallery {"linkTo":"none"} -->
+<figure class="wp-block-gallery has-nested-images columns-default is-cropped">
+
+    %for data in OffreManager.get_field(offre, ComposedFields.PHOTOS):
+<!-- wp:image -->
+<figure class="wp-block-image size-large">
+<a href="${data[Photo.URL.value]}">
+<img src="${data[Photo.URL.value]}" alt="" />
+</a>
+</figure>
+<!-- /wp:image -->
+    %endfor
+</figure>
+<!-- /wp:gallery -->
+%endif

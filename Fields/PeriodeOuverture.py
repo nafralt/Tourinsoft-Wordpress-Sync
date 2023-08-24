@@ -1,0 +1,14 @@
+from enum import Enum
+
+class PeriodeOuverture(Enum):
+
+    DATE_DEBUT = 0
+    DATE_FIN = 1
+    HEURE_OUVERT_1 = 2
+    HEURE_FERMETURE_1 = 3
+    HEURE_OUVERT_2 = 4
+    HEURE_FERMETURE_2 = 5
+    JOUR_OUVERTURE = 6
+    JOUR_FERMETURE = 7
+    COMPLEMENT_OUVERTURE = 8
+    COMPLEMENT_FERMETURE = 9

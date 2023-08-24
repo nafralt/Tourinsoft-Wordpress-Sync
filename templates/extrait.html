@@ -1,0 +1,15 @@
+<% from OffreManager import OffreManager %>\
+<% from Fields.Photo import Photo %>\
+<% from Fields.SingleFields import SingleFields %>\
+<% from Fields.ComposedFields import ComposedFields %>\
+<!-- wp:shortcode -->
+[tourinsoft_check id="${OffreManager.get_field(offre, SingleFields.ID)}"]
+<!-- /wp:shortcode -->
+
+%if not OffreManager.is_empty(offre, ComposedFields.PHOTOS):
+<!-- wp:image -->
+<figure class="wp-block-image size-large">
+<img src="${OffreManager.get_field(offre, ComposedFields.PHOTOS)[0][Photo.URL.value]}" alt="" />
+</figure>
+<!-- /wp:image -->
+%endif
