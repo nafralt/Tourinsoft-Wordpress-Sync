@@ -12,7 +12,6 @@ Installation des dépendances :
 pip install requirements.txt
 ```
 
-
 Veillez à éditer le fichier "**config.py**" :
 ```python
 PHOTOS_PATH = "" # Chemin du dossier où les photos téléchargées depuis Tourinsoft seront stockés
@@ -56,6 +55,8 @@ FLUX = {
     },
 ...
 ```
+
+Vous pouvez créer vos propres templates (Mako) dans le dossier du même nom.
 
 # Utilisation
 
