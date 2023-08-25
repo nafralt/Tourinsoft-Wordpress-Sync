@@ -1,0 +1,7 @@
+pyodata
+mysqlclient
+mako
+urllib
+logging
+argparse
+glob
