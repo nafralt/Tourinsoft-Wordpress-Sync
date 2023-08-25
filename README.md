@@ -37,7 +37,6 @@ FLUX = {
 
 Exemple de configuration :
 ```python
-```python
 PHOTOS_PATH = "/var/www/tourinsoft/img" # Chemin du dossier où les photos téléchargées depuis Tourinsoft seront stockés
 LOG_PATH = "/var/www/tourinsoft/log/wp_sync.log" # Chemin du fichier à créer pour écrire les logs
 GEOJSON_PATH = "/var/www/tourinsoft/coordonnees.json" # Chemin du fichier JSON au format GeoJSON à créer
